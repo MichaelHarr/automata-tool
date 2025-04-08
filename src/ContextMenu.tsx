@@ -20,6 +20,8 @@ export default function ContextMenu({ id, top, left, ...props }: ContextMenuProp
         setNodes((nds) =>
             nds.map((node) => {
                 if (node.id === id) {
+                    const newValue = !node.data.initialState;
+                    console.log(`Setting node ${id} initial state to: ${newValue}`);
                     return {
                         ...node,
                         data: {
