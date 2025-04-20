@@ -88,10 +88,18 @@ function App() {
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
 
-  const nodeIdCounter = useRef(nodes.length);
+  const [currentTime, setCurrentTime] = useState(0);
 
   const [menu, setMenu] = useState<MenuType | null>(null);
   const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/time')
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrentTime(data.time);
+      })
+  }, []);
 
   const onConnect = useCallback(
       (connection: any) => {
@@ -208,7 +216,7 @@ function App() {
   return (
     <>
     <h1 className="text-5xl font-bold text-black p-5">
-      Automata Simulator
+      Automata Simulator - Current Time {currentTime}
     </h1>
     <div className="relative w-full h-screen bg-gray-900 flex">
       <div className="w-1/4 border-r border-gray-300 p-4 text-white">
