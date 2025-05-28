@@ -1,5 +1,6 @@
 import './index.css'
 import Flow from './Flow';
+import SaveModal from './SaveModal';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlowProvider, 
         useEdgesState, 
@@ -74,6 +75,8 @@ function App() {
   const [selectedNodeId, setSelectedNodeId] = useState('');
   const [edgeName, setEdgeName] = useState('');
   const [selectedEdgeId, setSelectedEdgeId] = useState('');
+  
+  const [isSaveModelOpen, setIsSaveModelOpen] = useState(false);
 
   const [inputString, setInputString] = useState('');
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -212,7 +215,9 @@ function App() {
           <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onDragStart={(event) => onDragStart(event)} draggable>
             Add Node
           </div>
-          <div className="flex items-center gap-2">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setIsSaveModelOpen(true)}>
+            Save Automaton
+          </button>
             <input
               type="text"
               placeholder="Input String"
@@ -251,7 +256,6 @@ function App() {
             </div>
           )}
         </div>
-      </div>
       <ReactFlowProvider>
         <Flow 
             ref={ref}
@@ -277,6 +281,9 @@ function App() {
           />
       </ReactFlowProvider>
     </div>
+    { isSaveModelOpen && (
+      <SaveModal onClose={() => setIsSaveModelOpen(false)}></SaveModal>
+    )}
   </>
   )
 }
