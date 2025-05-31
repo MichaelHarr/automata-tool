@@ -80,11 +80,11 @@ function App() {
 
   const [inputString, setInputString] = useState('');
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [testStringFunction, setTestStringFunction] = useState<(input: string) => boolean>(() => () => false);
-
 
   const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode<CustomNodeData>>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<FlowEdge<CustomEdgeData>>(initialEdges);
+
+  const currentAutomaton = { nodes, edges }
 
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
@@ -282,7 +282,11 @@ function App() {
       </ReactFlowProvider>
     </div>
     { isSaveModelOpen && (
-      <SaveModal onClose={() => setIsSaveModelOpen(false)}></SaveModal>
+      <SaveModal 
+        onClose={() => setIsSaveModelOpen(false)} 
+        automatonData={currentAutomaton}
+      >
+      </SaveModal>
     )}
   </>
   )

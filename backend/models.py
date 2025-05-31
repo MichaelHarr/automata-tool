@@ -1,4 +1,4 @@
-from api import db
+from extensions import db
 
 class Automaton(db.Model):
     id = db.Column(db.Integer, primary_key=True)
