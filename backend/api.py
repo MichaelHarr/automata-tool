@@ -43,5 +43,19 @@ def save_automaton():
 
     return {"status": "success", "message": "Automaton saved!"}, 200
 
+@app.route('/load', methods=['GET'])
+def load_automata():
+    app.logger.info("Loading automata from DB...")
+    automata = Automaton.query.all()
+    result = []
+    for automaton in automata:
+        result.append({
+            "id": automaton.id,
+            "name": automaton.name,
+            "data": json.loads(automaton.data)
+        })
+    app.logger.info(f"Loaded {len(result)} automata")
+    return jsonify(result)
+
 if __name__ == '__main__':
     app.run(debug=True)
