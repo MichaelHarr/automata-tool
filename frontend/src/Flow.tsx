@@ -27,12 +27,6 @@ interface CustomEdgeData {
     [key: string]: unknown;
 }
 
-interface MenuType {
-    id: string;
-    top: number;
-    left: number;
-}
-
 interface FlowProps {
     nodes: FlowNode<CustomNodeData>[];
     edges: FlowEdge<CustomEdgeData>[];

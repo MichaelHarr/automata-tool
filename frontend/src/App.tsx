@@ -1,6 +1,7 @@
 import './index.css'
 import Flow from './Flow';
 import SaveModal from './SaveModal';
+import LoadModal from './LoadModal';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactFlowProvider, 
         useEdgesState, 
@@ -77,6 +78,7 @@ function App() {
   const [selectedEdgeId, setSelectedEdgeId] = useState('');
   
   const [isSaveModelOpen, setIsSaveModelOpen] = useState(false);
+  const [isLoadModelOpen, setIsLoadModelOpen] = useState(false);
 
   const [inputString, setInputString] = useState('');
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -231,6 +233,9 @@ function App() {
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Remove
             </button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setIsLoadModelOpen(true)}>
+              Load Automaton
+            </button>
           </div>
           { selectedNodeId && (
             <div>
@@ -256,6 +261,7 @@ function App() {
             </div>
           )}
         </div>
+      
       <ReactFlowProvider>
         <Flow 
             ref={ref}
@@ -287,6 +293,12 @@ function App() {
         automatonData={currentAutomaton}
       >
       </SaveModal>
+    )}
+    { isLoadModelOpen && (
+      <LoadModal 
+        onClose={() => setIsLoadModelOpen(false)} 
+      >
+      </LoadModal>
     )}
   </>
   )
