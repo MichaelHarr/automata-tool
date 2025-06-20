@@ -64,6 +64,12 @@ const initialEdges: FlowEdge<CustomEdgeData>[] = [
     }
 ];
 
+interface modelData {
+    data: string;
+    name: string;
+    id: number
+}
+
 interface MenuType {
     id: string;
     top: number;
@@ -79,6 +85,8 @@ function App() {
   
   const [isSaveModelOpen, setIsSaveModelOpen] = useState(false);
   const [isLoadModelOpen, setIsLoadModelOpen] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
 
   const [inputString, setInputString] = useState('');
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -206,6 +214,22 @@ function App() {
     edgesRef.current = edges;
   }, [edges]);
 
+  const handleModelLoad = (model: modelData) => {
+    try {
+      const parsed = typeof model.data === "string"
+        ? JSON.parse(model.data)
+        : model.data;
+
+      const { nodes, edges } = parsed;
+
+      setNodes(nodes);
+      setEdges(edges);
+      console.log("Model loaded successfully:", model.name);
+    } catch (error) {
+      console.error("Failed to parse model data:", error);
+    }
+  };
+
   return (
     <>
     <h1 className="text-5xl font-bold text-black p-5">
@@ -229,9 +253,6 @@ function App() {
             />
             <button onClick={() => checkInputString(inputString)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Test
-            </button>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Remove
             </button>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setIsLoadModelOpen(true)}>
               Load Automaton
@@ -297,6 +318,7 @@ function App() {
     { isLoadModelOpen && (
       <LoadModal 
         onClose={() => setIsLoadModelOpen(false)} 
+        onLoad={handleModelLoad}
       >
       </LoadModal>
     )}
