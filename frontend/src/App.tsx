@@ -174,9 +174,9 @@ const checkInputString = useCallback(async (input: string) => {
 
     const updatedNodes = nodes.map(node => ({
       ...node,
-      style: {
-        ...node.style,
-        backgroundColor: node.id === currentNode?.id ? '#87CEFA' : 'transparent',
+      data: {
+        ...node.data,
+        highlighted: node.id === currentNode?.id,
       },
     }));
 
