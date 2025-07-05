@@ -52,7 +52,7 @@ const initialEdges: FlowEdge<CustomEdgeData>[] = [
         target: '2', 
         animated: true, 
         markerEnd: {type: MarkerType.ArrowClosed, width: 20, height: 20},     
-        label: '1'
+        label: '1',
     },
     { 
         id: 'e2-3',     
@@ -60,7 +60,7 @@ const initialEdges: FlowEdge<CustomEdgeData>[] = [
         target: '3', 
         animated: true, 
         markerEnd: {type: MarkerType.ArrowClosed, width: 20, height: 20},
-        label: '0'
+        label: '0',
     }
 ];
 
@@ -85,8 +85,6 @@ function App() {
   
   const [isSaveModelOpen, setIsSaveModelOpen] = useState(false);
   const [isLoadModelOpen, setIsLoadModelOpen] = useState(false);
-
-  const [showModal, setShowModal] = useState(false);
 
   const [inputString, setInputString] = useState('');
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -146,33 +144,55 @@ function App() {
     event.dataTransfer.setData('application/reactflow', 'circleNode');
   }, []);
 
-  const checkInputString = useCallback((input: string) => {
-    console.log("Input String:", input);
-    console.log("Nodes:", nodes);
-    let currentNode = nodes.find(node => node.data.initialState);
+const checkInputString = useCallback(async (input: string) => {
+  console.log("Input String:", input);
+  console.log("Nodes:", nodes);
 
-    let transitionFound: boolean = true;
+  let currentNode = nodes.find(node => node.data.initialState);
+  if (!currentNode) return;
 
-    for (let i = 0; i < input.length; i++) {
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-        const transition = edges.find(edge => edge.source === currentNode?.id && edge.label === input[i]);
+  let isAccepted = false;
 
-        if (transition) {
-          currentNode = nodes.find(node => node.id === transition.target);
-          transitionFound = true;
-        } else {
-          console.log("No transition found for input:", input[i]);
-        }
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+
+    const transition = edges.find(
+      edge => edge.source === currentNode?.id && edge.label === char
+    );
+
+    if (!transition) {
+      console.log("No transition found for input:", char);
+      break;
     }
 
-    const isAccepted = transitionFound && currentNode?.data.finalState;
-    setIsValid(isAccepted ?? false);
-    console.log(isAccepted ? "Accepted" : "Not Accepted");
+    const nextNodeId = transition.target;
+    currentNode = nodes.find(node => node.id === nextNodeId);
+
+    if (!currentNode) break;
+
+    const updatedNodes = nodes.map(node => ({
+      ...node,
+      style: {
+        ...node.style,
+        backgroundColor: node.id === currentNode?.id ? '#87CEFA' : 'transparent',
+      },
+    }));
+
+    setNodes(updatedNodes);
+
+    await delay(500); 
+  }
+  
+
+  isAccepted = currentNode?.data?.finalState ?? false;
+  setIsValid(isAccepted);
+  console.log(isAccepted ? "Accepted" : "Not Accepted");
+
+}, [nodes, edges]);
 
 
-  }, [nodes, edges]);
-
-  // Update node label when nodeName changes
   useEffect(() => {
       setNodes((nds) =>
         nds.map((node) => {
@@ -191,7 +211,6 @@ function App() {
       );
     }, [setNodes, nodeName, selectedNodeId]);
 
-  // Update edge label when edgeName changes
   useEffect(() => {
       setEdges((eds) =>
         eds.map((edge) => {
@@ -304,7 +323,7 @@ function App() {
             setNodes={setNodes}
             onNodeContextMenu={onNodeContextMenu}
             onPaneClick={onPaneClick}
-            menu={menu}        
+            menu={menu}    
           />
       </ReactFlowProvider>
     </div>

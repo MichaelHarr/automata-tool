@@ -18,12 +18,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-@app.route('/time')
-def get_time():
-    current_time = datetime.datetime.now().isoformat()
-    app.logger.info(f"Current time: {current_time}")
-    return {"time": current_time}
-
 @app.route('/save', methods=['POST'])
 def save_automaton():
     app.logger.info("Saving automaton...")
@@ -56,6 +50,11 @@ def load_automata():
         })
     app.logger.info(f"Loaded {len(result)} automata")
     return jsonify(result)
+
+@app.route('/simulate', methods=['POST'])
+def simulate_fsm():
+    data = request.json()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

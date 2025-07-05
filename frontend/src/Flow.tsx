@@ -15,7 +15,7 @@ const nodeTypes = {
     circleNode: Node
   };
 
-  interface CustomNodeData {
+interface CustomNodeData {
     label: string;
     initialState: boolean;
     finalState: boolean;
@@ -94,7 +94,6 @@ function Flow({
 
     
     const onSelectionChange = useCallback(({ nodes: selectedNodes, edges: selectedEdges } : { nodes: FlowNode<CustomNodeData>[], edges: FlowEdge<CustomEdgeData>[] }) => {
-        // setMenu(null)
     
         if (selectedNodes && selectedNodes.length > 0) {
             const node = selectedNodes[0];
@@ -119,8 +118,6 @@ function Flow({
     useOnSelectionChange({
         onChange: onSelectionChange
     });
-
-
 
     return (
         <ReactFlow 
